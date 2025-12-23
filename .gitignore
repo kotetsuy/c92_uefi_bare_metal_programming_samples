@@ -2,6 +2,9 @@
 *.EFI
 *.txt
 fs
+*.o
+*.fd
+*.img
 
 GPATH
 GRTAG
