@@ -3,7 +3,6 @@
 *.txt
 fs
 *.o
-*.fd
 *.img
 
 GPATH

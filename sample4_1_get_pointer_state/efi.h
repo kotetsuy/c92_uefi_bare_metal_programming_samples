@@ -155,9 +155,27 @@ struct EFI_SIMPLE_POINTER_PROTOCOL {
 	void *WaitForInput;
 };
 
+struct EFI_ABSOLUTE_POINTER_STATE {
+	unsigned long long CurrentX;
+	unsigned long long CurrentY;
+	unsigned long long CurrentZ;
+	unsigned int ActiveButtons;
+};
+
+struct EFI_ABSOLUTE_POINTER_PROTOCOL {
+	unsigned long long (*Reset)(
+		struct EFI_ABSOLUTE_POINTER_PROTOCOL *This,
+		unsigned char ExtendedVerification);
+	unsigned long long (*GetState)(
+		struct EFI_ABSOLUTE_POINTER_PROTOCOL *This,
+		struct EFI_ABSOLUTE_POINTER_STATE *State);
+	void *WaitForInput;
+};
+
 extern struct EFI_SYSTEM_TABLE *ST;
 extern struct EFI_GRAPHICS_OUTPUT_PROTOCOL *GOP;
 extern struct EFI_SIMPLE_POINTER_PROTOCOL *SPP;
+extern struct EFI_ABSOLUTE_POINTER_PROTOCOL *APP;
 
 void efi_init(struct EFI_SYSTEM_TABLE *SystemTable);
 

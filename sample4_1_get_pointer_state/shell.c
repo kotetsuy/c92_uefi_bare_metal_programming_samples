@@ -10,27 +10,64 @@ void pstat(void)
 {
 	unsigned long long status;
 	struct EFI_SIMPLE_POINTER_STATE s;
+	//struct EFI_ABSOLUTE_POINTER_STATE a;
 	unsigned long long waitidx;
 
-	SPP->Reset(SPP, FALSE);
-
-	while (1) {
-		ST->BootServices->WaitForEvent(1, &(SPP->WaitForInput),
-					       &waitidx);
-		status = SPP->GetState(SPP, &s);
-		if (!status) {
-			puth(s.RelativeMovementX, 8);
-			puts(L" ");
-			puth(s.RelativeMovementY, 8);
-			puts(L" ");
-			puth(s.RelativeMovementZ, 8);
-			puts(L" ");
-			puth(s.LeftButton, 1);
-			puts(L" ");
-			puth(s.RightButton, 1);
-			puts(L"\r\n");
+	if (SPP) {
+		SPP->Reset(SPP, FALSE);
+		while (1) {
+			status = ST->BootServices->WaitForEvent(
+				1, &(SPP->WaitForInput), &waitidx);
+			if (status) {
+				puts(L"SPP WaitForEvent failed\r\n");
+				puth(status, 8);
+				puts(L"\r\n");
+				return;
+			}
+			status = SPP->GetState(SPP, &s);
+			if (!status) {
+				puth(s.RelativeMovementX, 8);
+				puts(L" ");
+				puth(s.RelativeMovementY, 8);
+				puts(L" ");
+				puth(s.RelativeMovementZ, 8);
+				puts(L" ");
+				puth(s.LeftButton, 1);
+				puts(L" ");
+				puth(s.RightButton, 1);
+				puts(L"\r\n");
+			}
 		}
 	}
+
+	#if 0
+	if (APP) {
+		APP->Reset(APP, FALSE);
+		while (1) {
+			status = ST->BootServices->WaitForEvent(
+				1, &(APP->WaitForInput), &waitidx);
+			if (status) {
+				puts(L"APP WaitForEvent failed\r\n");
+				puth(status, 8);
+				puts(L"\r\n");
+				return;
+			}
+			status = APP->GetState(APP, &a);
+			if (!status) {
+				puth(a.CurrentX, 8);
+				puts(L" ");
+				puth(a.CurrentY, 8);
+				puts(L" ");
+				puth(a.CurrentZ, 8);
+				puts(L" ");
+				puth(a.ActiveButtons, 2);
+				puts(L"\r\n");
+			}
+		}
+	}
+	#endif
+
+	puts(L"No pointer protocol found\r\n");
 }
 
 void debug(void)
