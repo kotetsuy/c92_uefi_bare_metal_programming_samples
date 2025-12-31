@@ -93,7 +93,7 @@ unsigned char update_exit_button(int px, int py, unsigned char is_clicked)
 
 	if (is_in_rect(px, py, rect_exit_button.rect)) {
 		if (!rect_exit_button.is_highlight) {
-			draw_rect(rect_exit_button.rect, yellow);
+			draw_rect(rect_exit_button.rect, green);
 			rect_exit_button.is_highlight = TRUE;
 		}
 		if (is_clicked)
@@ -190,7 +190,7 @@ void gui(void)
 				if (is_in_rect(px, py, file_list[idx].rect)) {
 					if (!file_list[idx].is_highlight) {
 						draw_rect(file_list[idx].rect,
-							  yellow);
+							  green);
 						file_list[idx].is_highlight = TRUE;
 					}
 					if (prev_lb && !s.LeftButton) {

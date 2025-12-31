@@ -31,5 +31,11 @@ void efi_init(EFI_SYSTEM_TABLE *SystemTable)
 			puts(L"\r\n");
 		}
 
+		puts(L"H ");
+		puth(GOP->Mode->Info->HorizontalResolution, 16);
+		puts(L": ");
+		puts(L"V ");
+		puth(GOP->Mode->Info->VerticalResolution, 16);
+		puts(L"\r\n");
 	}
 }

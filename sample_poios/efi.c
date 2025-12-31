@@ -23,4 +23,20 @@ void efi_init(struct EFI_SYSTEM_TABLE *SystemTable)
 	ST->BootServices->LocateProtocol(&gop_guid, NULL, (void **)&GOP);
 	ST->BootServices->LocateProtocol(&spp_guid, NULL, (void **)&SPP);
 	ST->BootServices->LocateProtocol(&sfsp_guid, NULL, (void **)&SFSP);
+
+	#if 0
+	/* 800x600 のモードを探す */
+	for (int i = 0; i < Gop->Mode->MaxMode; i++) {
+    	struct EFI_GRAPHICS_OUTPUT_MODE_INFORMATION *Info;
+    	int Size;
+
+	    Gop->QueryMode(Gop, i, &Size, &Info);
+    	if (Info->HorizontalResolution == 800 &&
+        	Info->VerticalResolution == 600) {
+        	Mode800x600 = i;
+        	break;
+    	}
+	}
+	Gop->SetMode(Gop, Mode800x600);
+	#endif
 }
