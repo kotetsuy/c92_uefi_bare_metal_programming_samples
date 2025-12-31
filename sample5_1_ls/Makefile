@@ -21,7 +21,7 @@ LDFLAGS = \
 # ===== build =====
 all: disk.img
 
-OBJS = main.o common.o efi.o shell.o graphics.o gui.o
+OBJS = main.o common.o efi.o shell.o graphics.o gui.o file.o
 
 BOOTX64.EFI: $(OBJS)
 	$(LD) $(LDFLAGS) $^ /out:$@
@@ -42,6 +42,8 @@ run: BOOTX64.EFI disk.img OVMF_CODE.fd OVMF_VARS.fd
 	-device qemu-xhci \
 	-device usb-mouse \
 	-display cocoa \
+	-device usb-storage,drive=usbstick \
+	-drive if=none,id=usbstick,format=raw,file=usb.img \
 	-serial stdio
 
 disk.img: BOOTX64.EFI
