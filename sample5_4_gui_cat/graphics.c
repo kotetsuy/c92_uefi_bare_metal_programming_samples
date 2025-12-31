@@ -3,7 +3,7 @@
 #include "graphics.h"
 
 const struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL white = {0xff, 0xff, 0xff, 0xff};
-const struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL yellow = {0x00, 0xff, 0xff, 0xff};
+const struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL green = {0x00, 0xff, 0x00, 0xff};
 
 void draw_pixel(unsigned int x, unsigned int y,
 		struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL color)
