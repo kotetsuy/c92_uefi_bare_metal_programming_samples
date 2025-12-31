@@ -121,7 +121,7 @@ void gui(void)
 				if (is_in_rect(px, py, file_list[idx].rect)) {
 					if (!file_list[idx].is_highlight) {
 						draw_rect(file_list[idx].rect,
-							  yellow);
+							  green);
 						file_list[idx].is_highlight = TRUE;
 					}
 					if (prev_lb && !s.LeftButton) {
