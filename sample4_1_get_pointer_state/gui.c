@@ -1,5 +1,4 @@
 #include "efi.h"
-#include "common.h"
 #include "graphics.h"
 #include "gui.h"
 

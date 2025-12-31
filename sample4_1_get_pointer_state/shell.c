@@ -9,8 +9,7 @@
 void pstat(void)
 {
 	unsigned long long status;
-	struct EFI_SIMPLE_POINTER_STATE s;
-	//struct EFI_ABSOLUTE_POINTER_STATE a;
+	EFI_SIMPLE_POINTER_STATE s;
 	unsigned long long waitidx;
 
 	if (SPP) {
@@ -39,54 +38,7 @@ void pstat(void)
 			}
 		}
 	}
-
-	#if 0
-	if (APP) {
-		APP->Reset(APP, FALSE);
-		while (1) {
-			status = ST->BootServices->WaitForEvent(
-				1, &(APP->WaitForInput), &waitidx);
-			if (status) {
-				puts(L"APP WaitForEvent failed\r\n");
-				puth(status, 8);
-				puts(L"\r\n");
-				return;
-			}
-			status = APP->GetState(APP, &a);
-			if (!status) {
-				puth(a.CurrentX, 8);
-				puts(L" ");
-				puth(a.CurrentY, 8);
-				puts(L" ");
-				puth(a.CurrentZ, 8);
-				puts(L" ");
-				puth(a.ActiveButtons, 2);
-				puts(L"\r\n");
-			}
-		}
-	}
-	#endif
-
 	puts(L"No pointer protocol found\r\n");
-}
-
-void debug(void)
-{
-	#if 0
-	unsigned long long Count;
-	struct EFI_HANDLE *Handles;
-	struct EFI_BOOT_SERVICES *gBS;
-
-	gBS->LocateHandleBuffer(
-    	ByProtocol,
-    	&gEfiSimplePointerProtocolGuid,
-    	NULL,
-    	&Count,
-    	&Handles
-	);
-	puth(Count, 8);
-	puts(L" ");
-	#endif
 }
 
 void shell(void)
@@ -107,8 +59,6 @@ void shell(void)
 			gui();
 		else if (!strcmp(L"pstat", com))
 			pstat();
-		else if (!strcmp(L"debug", com))
-			debug();
 		else
 			puts(L"Command not found.\r\n");
 	}

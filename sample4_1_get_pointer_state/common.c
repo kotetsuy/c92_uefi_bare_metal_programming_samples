@@ -36,7 +36,7 @@ void puth(unsigned long long val, unsigned char num_digits)
 
 unsigned short getc(void)
 {
-	struct EFI_INPUT_KEY key;
+	EFI_INPUT_KEY key;
 	unsigned long long waitidx;
 
 	ST->BootServices->WaitForEvent(1, &(ST->ConIn->WaitForKey),

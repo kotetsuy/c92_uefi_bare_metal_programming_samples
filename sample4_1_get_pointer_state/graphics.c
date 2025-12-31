@@ -1,15 +1,15 @@
 #include "efi.h"
 #include "graphics.h"
 
-const struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL white = {0xff, 0xff, 0xff, 0xff};
+const EFI_GRAPHICS_OUTPUT_BLT_PIXEL white = {0xff, 0xff, 0xff, 0xff};
 
 void draw_pixel(unsigned int x, unsigned int y,
-		struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL color)
+		EFI_GRAPHICS_OUTPUT_BLT_PIXEL color)
 {
 	unsigned int hr = GOP->Mode->Info->HorizontalResolution;
-	struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL *base =
-		(struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL *)GOP->Mode->FrameBufferBase;
-	struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL *p = base + (hr * y) + x;
+	EFI_GRAPHICS_OUTPUT_BLT_PIXEL *base =
+		(EFI_GRAPHICS_OUTPUT_BLT_PIXEL *)GOP->Mode->FrameBufferBase;
+	EFI_GRAPHICS_OUTPUT_BLT_PIXEL *p = base + (hr * y) + x;
 
 	p->Blue = color.Blue;
 	p->Green = color.Green;
@@ -17,7 +17,7 @@ void draw_pixel(unsigned int x, unsigned int y,
 	p->Reserved = color.Reserved;
 }
 
-void draw_rect(struct RECT r, struct EFI_GRAPHICS_OUTPUT_BLT_PIXEL c)
+void draw_rect(struct RECT r, EFI_GRAPHICS_OUTPUT_BLT_PIXEL c)
 {
 	unsigned int i;
 
