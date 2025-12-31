@@ -1,14 +1,63 @@
-all: fs/EFI/BOOT/BOOTX64.EFI
+# ===== toolchain =====
+CC      = clang
+LD      = lld-link
 
-fs/EFI/BOOT/BOOTX64.EFI: efi.c common.c graphics.c shell.c gui.c main.c
-	mkdir -p fs/EFI/BOOT
-	x86_64-w64-mingw32-gcc -Wall -Wextra -e efi_main -nostdinc -nostdlib \
-	-fno-builtin -Wl,--subsystem,10 -o $@ $+
+# EDK2 headers (git cloneした場所に合わせて変更)
+#EDK2_DIR ?= ../../edk2
+#EDK2_INC  = -I$(EDK2_DIR)/MdePkg/Include -I$(EDK2_DIR)/MdePkg/Include/X64 -I$(EDK2_DIR)/MdePkg/Include/Uefi
 
-run: fs/EFI/BOOT/BOOTX64.EFI
-	qemu-system-x86_64 -bios /usr/share/ovmf/OVMF.fd -hda fat:fs
+CFLAGS = \
+	-target x86_64-unknown-windows \
+	-ffreestanding -fno-stack-protector -fno-pic \
+	-fshort-wchar \
+	-mno-red-zone 
+#	$(EDK2_INC)
+
+LDFLAGS = \
+	/subsystem:efi_application \
+	/entry:efi_main \
+	/nodefaultlib
+
+# ===== build =====
+all: disk.img
+
+OBJS = main.o common.o efi.o shell.o graphics.o gui.o
+
+BOOTX64.EFI: $(OBJS)
+	$(LD) $(LDFLAGS) $^ /out:$@
+
+# modern rule
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# ===== run =====
+run: BOOTX64.EFI disk.img OVMF_CODE.fd OVMF_VARS.fd
+	qemu-system-x86_64 \
+	-machine q35 \
+	-cpu qemu64 \
+	-m 512M \
+	-drive if=pflash,format=raw,readonly=on,file=OVMF_CODE.fd \
+	-drive if=pflash,format=raw,file=OVMF_VARS.fd \
+	-drive file=disk.img,format=raw \
+	-device qemu-xhci \
+	-device usb-mouse \
+	-display cocoa \
+	-serial stdio
+
+disk.img: BOOTX64.EFI
+	dd if=/dev/zero of=disk.img bs=1m count=64
+	mkfs.fat -F 32 disk.img
+	mmd   -i disk.img ::/EFI
+	mmd   -i disk.img ::/EFI/BOOT
+	mcopy -i disk.img BOOTX64.EFI ::/EFI/BOOT/BOOTX64.EFI
+
+OVMF_CODE.fd:
+	cp ../OVMF/OVMF_CODE.fd .
+
+OVMF_VARS.fd:
+	cp ../OVMF/OVMF_VARS.fd .
 
 clean:
-	rm -rf *~ fs
+	rm -f BOOTX64.EFI disk.img *.o *.fd
 
 .PHONY: clean

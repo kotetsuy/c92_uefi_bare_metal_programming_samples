@@ -75,7 +75,7 @@ void gui(void)
 			/* ファイルアイコン処理 */
 			if (is_in_rect(px, py, r)) {
 				if (!is_highlight) {
-					draw_rect(r, yellow);
+					draw_rect(r, green);
 					is_highlight = TRUE;
 				}
 			} else {
